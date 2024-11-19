@@ -49,7 +49,7 @@ router.get('/download/:token', async (req, res) => {
     });
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="laporan-helpdesk.xlsx"');
+    res.setHeader('Content-Disposition', 'attachment; filename="report-helpdesk.xlsx"');
 
     const buffer = await workbook.xlsx.writeBuffer();
     return res.send(buffer);
