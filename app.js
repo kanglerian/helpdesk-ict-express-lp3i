@@ -17,6 +17,7 @@ const allowedOriginSocket = [
   'http://localhost',
   'http://127.0.0.1:5173',
   'http://localhost:5173',
+  'https://helpdesk.politekniklp3i-tasikmalaya.ac.id',
 ];
 
 const app = express();
