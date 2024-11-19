@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
 
+const verifyapikey = require('../middleware/verifyapikey');
+
 /* POST Auth */
-router.post('/login', async (req, res) => {
+router.post('/login', verifyapikey, async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
@@ -14,18 +16,19 @@ router.post('/login', async (req, res) => {
     });
     if(!user){
       return res.status(401).json({
-        message: 'Akun tidak ditemukan!'
+        message: 'Account not found!'
       });
     }
     return res.json(user);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
-router.post('/admin/login', async (req, res) => {
+router.post('/admin/login', verifyapikey, async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
@@ -36,13 +39,14 @@ router.post('/admin/login', async (req, res) => {
     });
     if(!user){
       return res.status(401).json({
-        message: 'Akun tidak ditemukan!'
+        message: 'Account not found!'
       });
     }
     return res.json(user);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });

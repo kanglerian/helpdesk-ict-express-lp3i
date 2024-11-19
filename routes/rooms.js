@@ -2,20 +2,23 @@ const express = require('express');
 const router = express.Router();
 const { Room } = require('../models');
 
+const verifyapikey = require('../middleware/verifyapikey');
+
 /* GET rooms listing. */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const rooms = await Room.findAll();
     return res.json(rooms);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
 /* GET rooms listing. */
-router.get('/:token', async (req, res) => {
+router.get('/:token', verifyapikey, async (req, res) => {
   try {
     const room = await Room.findOne({
       where: {
@@ -24,13 +27,14 @@ router.get('/:token', async (req, res) => {
     });
     if(!room){
       return res.status(404).json({
-        message: 'Ruangan tidak ditemukan!'
+        message: 'Room not found!'
       });
     }
     return res.json(room);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });

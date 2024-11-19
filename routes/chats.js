@@ -5,13 +5,16 @@ const moment = require('moment-timezone');
 const { Chat } = require('../models');
 const { Op } = require('sequelize');
 
+const verifyapikey = require('../middleware/verifyapikey');
+
 /* GET chats listing. */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
-    res.send('Helpdesk Chat 🇮🇩');
+    return res.send('Helpdesk Chat 🇮🇩');
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
@@ -26,12 +29,12 @@ router.get('/download/:token', async (req, res) => {
     });
     if (!chats.length > 0) {
       return res.status(404).json({
-        message: `Pesan berdasarkan token ${req.params.token} tidak ditemukan!`
+        message: `Message based on token ${req.params.token} not found!`
       });
     }
     const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet(`Laporan Helpdesk`);
-    sheet.addRow(['No.', 'Ruangan', 'Token', 'Pengirim', 'Pesan', 'Tanggal']);
+    const sheet = workbook.addWorksheet(`Report of Helpdesk`);
+    sheet.addRow(['No.', 'Room', 'Token', 'Sender', 'Message', 'Datetime']);
 
     chats.forEach((result, index) => {
       const time = moment(result.createdAt).tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
@@ -51,13 +54,14 @@ router.get('/download/:token', async (req, res) => {
     const buffer = await workbook.xlsx.writeBuffer();
     return res.send(buffer);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
-router.get('/admin/:token', async (req, res) => {
+router.get('/admin/:token', verifyapikey, async (req, res) => {
   try {
     const chats = await Chat.findAll({
       where: {
@@ -66,18 +70,19 @@ router.get('/admin/:token', async (req, res) => {
     });
     if (!chats.length > 0) {
       return res.status(404).json({
-        message: `Pesan berdasarkan token ${req.params.token} tidak ditemukan!`
+        message: `Message based on token ${req.params.token} not found!`
       });
     }
     return res.json(chats);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
-router.get('/student/:token/:room', async (req, res) => {
+router.get('/student/:token/:room', verifyapikey, async (req, res) => {
   try {
     const chats = await Chat.findAll({
       where: {
@@ -93,18 +98,19 @@ router.get('/student/:token/:room', async (req, res) => {
     });
     if (!chats.length > 0) {
       return res.status(404).json({
-        message: `Pesan berdasarkan token ${req.params.token} tidak ditemukan!`
+        message: `Message for token ${req.params.token} not found!`
       });
     }
     return res.json(chats);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
-router.get('/dashboard/:token', async (req, res) => {
+router.get('/dashboard/:token', verifyapikey, async (req, res) => {
   try {
     const chats = await Chat.findAll({
       where: {
@@ -114,18 +120,19 @@ router.get('/dashboard/:token', async (req, res) => {
     });
     if (!chats.length > 0) {
       return res.status(404).json({
-        message: `Pesan berdasarkan token ${req.params.token} tidak ditemukan!`
+        message: `Message with token ${req.params.token} not found!`
       });
     }
     return res.json(chats);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
-router.delete('/:token', async (req, res) => {
+router.delete('/:token', verifyapikey, async (req, res) => {
   try {
     await Chat.destroy({
       where: {
@@ -133,11 +140,12 @@ router.delete('/:token', async (req, res) => {
       }
     });
     return res.json({
-      message: `Pesan dengan token ${req.params.token} berhasil dihapus!`
+      message: `Message with token ${req.params.token} has been successfully deleted!`
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });

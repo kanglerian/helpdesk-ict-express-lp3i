@@ -3,39 +3,43 @@ const router = express.Router();
 const { User } = require('../models');
 const { UUIDV4 } = require('sequelize');
 
+const verifyapikey = require('../middleware/verifyapikey');
+
 /* GET users listing. */
-router.get('/', async (req, res) => {
+router.get('/', verifyapikey, async (req, res) => {
   try {
     const users = await User.findAll();
     if(!users){
       return res.status(404).json({
-        message: 'Belum ada akun.'
+        message: 'No account found.'
       });
     }
     return res.json(users);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
 
 /* POST create user. */
-router.post('/', async (req, res) => {
+router.post('/', verifyapikey, async (req, res) => {
   try {
-    User.create(req.body);
-    return res.send('ok');
-    // const users = await User.findAll();
-    // if(!users){
-    //   return res.status(404).json({
-    //     message: 'Belum ada akun.'
-    //   });
-    // }
-    // return res.json(users);
+    if (!req.body.username || !req.body.email) {
+      return res.status(400).json({
+        message: 'Username and email are required.'
+      });
+    }
+    const user = await User.create(req.body);
+    return res.status(201).json({
+      message: 'User successfully created!',
+      user: user
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: 'Terjadi kesalahan di server. Silakan coba lagi nanti.'
+      message: 'An error occurred on the server. Please try again later.'
     });
   }
 });
