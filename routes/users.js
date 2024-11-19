@@ -3,7 +3,7 @@ const router = express.Router();
 const { User } = require('../models');
 const { UUIDV4 } = require('sequelize');
 
-const verifyapikey = require('../middleware/verifyapikey');
+const verifyapikey = require('../middlewares/verifyapikey');
 
 /* GET users listing. */
 router.get('/', verifyapikey, async (req, res) => {

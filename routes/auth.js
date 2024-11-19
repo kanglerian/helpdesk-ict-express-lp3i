@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
 
-const verifyapikey = require('../middleware/verifyapikey');
+const verifyapikey = require('../middlewares/verifyapikey');
 
 /* POST Auth */
 router.post('/login', verifyapikey, async (req, res) => {

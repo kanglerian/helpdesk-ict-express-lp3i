@@ -5,7 +5,7 @@ const moment = require('moment-timezone');
 const { Chat } = require('../models');
 const { Op } = require('sequelize');
 
-const verifyapikey = require('../middleware/verifyapikey');
+const verifyapikey = require('../middlewares/verifyapikey');
 
 /* GET chats listing. */
 router.get('/', verifyapikey, async (req, res) => {
