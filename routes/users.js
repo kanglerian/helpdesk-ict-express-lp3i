@@ -29,7 +29,8 @@ router.get('/auto', verifyapikey, async (req, res) => {
     const users = await User.findOne({
       where: {
         role: "S"
-      }
+      },
+      attributes: ["username", "password"]
     });
     if(!users){
       return res.status(404).json({
