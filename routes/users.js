@@ -23,6 +23,28 @@ router.get('/', verifyapikey, async (req, res) => {
   }
 });
 
+/* GET user listing. */
+router.get('/auto', verifyapikey, async (req, res) => {
+  try {
+    const users = await User.findOne({
+      where: {
+        role: "S"
+      }
+    });
+    if(!users){
+      return res.status(404).json({
+        message: 'No account found.'
+      });
+    }
+    return res.json(users);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: 'An error occurred on the server. Please try again later.'
+    });
+  }
+});
+
 /* POST create user. */
 router.post('/', verifyapikey, async (req, res) => {
   try {
