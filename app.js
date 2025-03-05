@@ -19,7 +19,9 @@ const allowedOriginSocket = [
   'http://localhost:5173',
   'http://localhost:8081',
   'http://127.0.0.1:8081',
+  'http://195.168.40.18:8081',
   'https://helpdesk.politekniklp3i-tasikmalaya.ac.id',
+  null,
 ];
 
 const app = express();
