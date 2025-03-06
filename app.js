@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
           latitude: response.latitude,
           longitude: response.longitude,
         });
-        if(response.role_sender === 'S'){
+
           const messageNotif = {
             to: 'm0WSXqOYSJXWZoaiSMb4MH',
             sound: 'default',
@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
             },
             body: JSON.stringify(messageNotif),
           });
-        }
+
         io.emit('message', data)
       } catch (err) {
         console.log(err.message);
