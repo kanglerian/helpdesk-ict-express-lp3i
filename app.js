@@ -22,6 +22,7 @@ const allowedOriginSocket = [
   'http://195.168.40.18:8081',
   'https://helpdesk.politekniklp3i-tasikmalaya.ac.id',
   null,
+  '*'
 ];
 
 const app = express();
