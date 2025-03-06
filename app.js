@@ -73,7 +73,11 @@ io.on('connection', (socket) => {
             sound: 'default',
             title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
             body: response.message,
-            data: response,
+            data: {
+              showPopup: true,
+              data: response
+            },
+            priority: 'high',
           };
         
           await fetch('https://exp.host/--/api/v2/push/send', {
