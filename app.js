@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         });
 
           const messageNotif = {
-            to: 'm0WSXqOYSJXWZoaiSMb4MH',
+            to: 'ExponentPushToken[m0WSXqOYSJXWZoaiSMb4MH]',
             sound: 'default',
             title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
             body: response.message,
