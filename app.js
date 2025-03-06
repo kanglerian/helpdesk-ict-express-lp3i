@@ -67,6 +67,25 @@ io.on('connection', (socket) => {
           latitude: response.latitude,
           longitude: response.longitude,
         });
+        if(response.role_sender === 'S'){
+          const messageNotif = {
+            to: 'm0WSXqOYSJXWZoaiSMb4MH',
+            sound: 'default',
+            title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
+            body: response.message,
+            data: response,
+          };
+        
+          await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Accept-encoding': 'gzip, deflate',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messageNotif),
+          });
+        }
         io.emit('message', data)
       } catch (err) {
         console.log(err.message);
