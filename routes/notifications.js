@@ -7,6 +7,11 @@ const verifyapikey = require('../middlewares/verifyapikey');
 
 router.post('/', verifyapikey, async (req, res) => {
   try {
+    if (!req.body.token) {
+      return res.status(400).json({
+        message: 'Token is required.'
+      });
+    }
     const token = await Token.findOne({
       where: {
         token: req.body.token
