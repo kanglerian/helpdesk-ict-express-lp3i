@@ -12,6 +12,7 @@ const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const roomsRouter = require('./routes/rooms');
 const chatsRouter = require('./routes/chats');
+const notificationsRouter = require('./routes/notifications');
 
 const allowedOriginSocket = [
   'http://localhost',
@@ -47,6 +48,7 @@ app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 app.use('/chats', chatsRouter);
+app.use('/notifications', notificationsRouter);
 
 io.on('connection', (socket) => {
   console.log('client connected');

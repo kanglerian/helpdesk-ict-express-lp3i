@@ -23,7 +23,6 @@ router.post('/', verifyapikey, async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'An error occurred on the server. Please try again later.'
     });
