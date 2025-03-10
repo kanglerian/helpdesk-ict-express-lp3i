@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 
         const tokens = [
           'ExponentPushToken[viOhO_KieTmFwLTHY5dTqH]',
-          'ExponentPushToken[OKCUO6JhFvjzEB-hqtlr21]',
+          'ExponentPushToken[OKCUO6JhFvjzEB-hqtIr21]',
           'ExponentPushToken[kllvmJIah1d2bqtCmo_gq]',
         ];
 
