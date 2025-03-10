@@ -46,6 +46,36 @@ router.post('/', verifyapikey, async (req, res) => {
   }
 });
 
+router.patch('/:token', verifyapikey, async (req, res) => {
+  try {
+    const room = await Room.findOne({
+      where: {
+        token: req.params.token,
+      }
+    });
+    if (!room) {
+      return res.status(400).json({
+        message: 'Room not found!'
+      });
+    }
+    await Room.update({
+      name: req.body.name,
+    }, {
+      where: {
+        token: req.params.token,
+      }
+    });
+    return res.json({
+      message: 'Room updated successfully!'
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: 'An error occurred on the server. Please try again later.'
+    });
+  }
+});
+
 /* GET rooms listing. */
 router.get('/:token', verifyapikey, async (req, res) => {
   try {
@@ -80,7 +110,7 @@ router.delete('/:token', verifyapikey, async (req, res) => {
         message: 'Room not found!'
       });
     }
-    if(room.token === '46150'){
+    if (room.token === '46150') {
       return res.status(400).json({
         message: 'Cannot delete default room!'
       });
