@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
         const tokens = [
           'ExponentPushToken[viOhO_KieTmFwLTHY5dTqH]',
           'ExponentPushToken[OKCUO6JhFvjzEB-hqtlr21]',
-          'ExponentPushToken[kllvmJlah1d2bqtCmo_gq]',
+          'ExponentPushToken[kllvmJIah1d2bqtCmo_gq]',
         ];
 
           const messageNotif = {
