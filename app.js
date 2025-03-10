@@ -69,10 +69,15 @@ io.on('connection', (socket) => {
           longitude: response.longitude,
         });
 
-        const tokens = await Token.findAll();
+        const tokens = await Token.findAll({
+          attributes: ['token',],
+          raw: true,
+        });
 
-        const messageNotif = {
-          to: tokens,
+        const tokenList = tokens.map(t => t.token);
+
+        const messageNotif = tokenList.map(token => ({
+          to: token,
           sound: 'default',
           title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
           body: response.message,
@@ -81,7 +86,7 @@ io.on('connection', (socket) => {
             data: response
           },
           priority: 'high',
-        };
+        }));
 
         await fetch('https://exp.host/--/api/v2/push/send', {
           method: 'POST',
