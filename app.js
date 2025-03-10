@@ -69,8 +69,14 @@ io.on('connection', (socket) => {
           longitude: response.longitude,
         });
 
+        const tokens = [
+          'ExponentPushToken[viOhO_KieTmFwLTHY5dTqH]',
+          'ExponentPushToken[OKCUO6JhFvjzEB-hqtlr21]',
+          'ExponentPushToken[kllvmJlah1d2bqtCmo_gq]',
+        ];
+
           const messageNotif = {
-            to: 'ExponentPushToken[4mfbRIAMctxVB2MjN9Nme0]',
+            to: tokens,
             sound: 'default',
             title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
             body: response.message,
