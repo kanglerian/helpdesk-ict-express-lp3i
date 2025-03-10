@@ -4,7 +4,7 @@ const http = require('http');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const logger = require('morgan');
-const { Chat } = require('./models');
+const { Chat, Token } = require('./models');
 const { Server } = require('socket.io');
 
 const indexRouter = require('./routes/index');
@@ -69,33 +69,29 @@ io.on('connection', (socket) => {
           longitude: response.longitude,
         });
 
-        const tokens = [
-          'ExponentPushToken[viOhO_KieTmFwLTHY5dTqH]',
-          'ExponentPushToken[OKCUO6JhFvjzEB-hqtIr21]',
-          'ExponentPushToken[kllvmJIah1d2bqtCmo_gq]',
-        ];
+        const tokens = await Token.findAll();
 
-          const messageNotif = {
-            to: tokens,
-            sound: 'default',
-            title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
-            body: response.message,
-            data: {
-              showPopup: true,
-              data: response
-            },
-            priority: 'high',
-          };
-        
-          await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Accept-encoding': 'gzip, deflate',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(messageNotif),
-          });
+        const messageNotif = {
+          to: tokens,
+          sound: 'default',
+          title: `Helpdesk ICT ${response.name_room}: ${response.client}`,
+          body: response.message,
+          data: {
+            showPopup: true,
+            data: response
+          },
+          priority: 'high',
+        };
+
+        await fetch('https://exp.host/--/api/v2/push/send', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Accept-encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(messageNotif),
+        });
 
         io.emit('message', data)
       } catch (err) {
