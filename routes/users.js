@@ -84,4 +84,21 @@ router.get('/profile', verifytoken, async (req, res) => {
   }
 });
 
+router.get('/profile/admin', verifytoken, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        uuid: req.user.data.uuid,
+        role: 'A',
+      },
+    });
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.json({
+      message: error.message
+    });
+  }
+});
+
 module.exports = router;
