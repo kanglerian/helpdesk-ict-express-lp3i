@@ -177,7 +177,7 @@ router.get('/token', async (req, res) => {
 
 router.get('/token/admin', async (req, res) => {
   try {
-    const refreshToken = req.body.refresh_token;
+    const refreshToken = req.query.refresh_token;
     if (!refreshToken) {
       return res.status(400).json({
         status: 'error',
