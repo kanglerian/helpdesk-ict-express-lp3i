@@ -175,6 +175,39 @@ router.get('/token', async (req, res) => {
   }
 });
 
+router.get('/token/admin', async (req, res) => {
+  try {
+    const refreshToken = req.body.refresh_token;
+    if (!refreshToken) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'invalid token'
+      });
+    }
+
+    const refresh = await RefreshToken.findOne({
+      where: {
+        refresh_token: refreshToken
+      }
+    });
+
+    if (!refresh) {
+      return res.status(400).json({ message: 'Refresh token not found.' });
+    }
+
+    jwt.verify(refreshToken, JWT_SECRET_REFRESH_TOKEN, (error, decoded) => {
+      if (error) {
+        return res.status(403).json({ message: error.message });
+      }
+      const token = jwt.sign({ data: decoded.data }, JWT_SECRET, { expiresIn: JWT_ACCESS_TOKEN_EXPIRED });
+      return res.status(200).json(token);
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 router.delete('/logout', verifytoken, async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshTokenHelpdeskICT;
