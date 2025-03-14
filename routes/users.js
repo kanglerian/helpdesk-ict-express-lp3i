@@ -4,6 +4,7 @@ const { User } = require('../models');
 const { UUIDV4 } = require('sequelize');
 
 const verifyapikey = require('../middlewares/verifyapikey');
+const verifytoken = require('../middlewares/verifytoken');
 
 /* GET users listing. */
 router.get('/', verifyapikey, async (req, res) => {
@@ -67,5 +68,20 @@ router.post('/', verifyapikey, async (req, res) => {
   }
 });
 
+router.get('/profile', verifytoken, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        uuid: req.user.data.uuid
+      },
+    });
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.json({
+      message: error.message
+    });
+  }
+});
 
 module.exports = router;

@@ -22,8 +22,6 @@ const allowedOriginSocket = [
   'http://127.0.0.1:8081',
   'http://195.168.40.18:8081',
   'https://helpdesk.politekniklp3i-tasikmalaya.ac.id',
-  null,
-  '*'
 ];
 
 const app = express();
@@ -32,11 +30,16 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: allowedOriginSocket,
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
   }
 });
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOriginSocket,
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+  credentials: true,
+}));
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
