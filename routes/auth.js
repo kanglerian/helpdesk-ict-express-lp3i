@@ -60,6 +60,59 @@ router.post('/login', verifyapikey, async (req, res) => {
   }
 });
 
+router.post('/login/admin', verifyapikey, async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(422).json({ message: 'Username and password are required.' });
+  }
+
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+        password: req.body.password,
+        role: 'A'
+      }
+    });
+
+    if(!user){
+      return res.status(401).json({
+        message: 'Account not found!'
+      });
+    }
+
+    const payload = {
+      uuid: user.uuid,
+      name: user.name,
+      role: user.role,
+    }
+    
+    const token = jwt.sign({ data: payload }, JWT_SECRET, { expiresIn: JWT_ACCESS_TOKEN_EXPIRED });
+    const refreshToken = jwt.sign({ data: payload }, JWT_SECRET_REFRESH_TOKEN, { expiresIn: JWT_REFRESH_TOKEN_EXPIRED });
+
+    await RefreshToken.create({
+      refresh_token: refreshToken,
+      user_id: user.id
+    });
+
+    res.cookie('refreshTokenHelpdeskICT', refreshToken, {
+      httpOnly: true,
+      secure: false,
+    });
+
+    return res.status(200).json({
+      token: token,
+      message: 'Login successful!'
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: 'An error occurred on the server. Please try again later.'
+    });
+  }
+});
+
 router.get('/token', async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshTokenHelpdeskICT;
