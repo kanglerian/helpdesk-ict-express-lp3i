@@ -96,13 +96,9 @@ router.post('/login/admin', verifyapikey, async (req, res) => {
       user_id: user.id
     });
 
-    res.cookie('refreshTokenHelpdeskICT', refreshToken, {
-      httpOnly: true,
-      secure: false,
-    });
-
     return res.status(200).json({
       token: token,
+      refresh_token: refreshToken,
       message: 'Login successful!'
     });
   } catch (error) {
@@ -211,6 +207,43 @@ router.delete('/logout', verifytoken, async (req, res) => {
     });
     
     res.clearCookie('refreshTokenHelpdeskICT');
+    return res.status(200).json({ message: 'Successfully logged out.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.delete('/logout/admin', verifytoken, async (req, res) => {
+  try {
+    const refreshToken = req.body.refresh_token;
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'No refresh token provided' });
+    }
+
+    const user = await User.findOne({
+      where: {
+        uuid: req.user.data.uuid
+      }
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const refresh = await RefreshToken.findOne({
+      where: {
+        refresh_token: refreshToken,
+        user_id: user.id 
+      }
+    });
+
+    if (!refresh) {
+      return res.status(400).json({ message: 'Invalid refresh token' });
+    }
+
+    await RefreshToken.destroy({
+      where: { refresh_token: refreshToken }
+    });
+    
     return res.status(200).json({ message: 'Successfully logged out.' });
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error' });
