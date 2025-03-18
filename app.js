@@ -22,6 +22,7 @@ const allowedOriginSocket = [
   'http://127.0.0.1:8081',
   'http://195.168.40.18:8081',
   'https://helpdesk.politekniklp3i-tasikmalaya.ac.id',
+  'https://kanglerian-switch.vercel.app'
 ];
 
 const app = express();
@@ -55,6 +56,11 @@ app.use('/notifications', notificationsRouter);
 
 io.on('connection', (socket) => {
   console.log('client connected');
+
+  socket.on("switch-lamp", (data) => {
+    console.log(data);
+    io.emit('switch-data', data);
+  });
 
   socket.on("message", async (response) => {
     if (!response.not_save) {
