@@ -7,6 +7,8 @@ const logger = require('morgan');
 const { Chat, Token } = require('./models');
 const { Server } = require('socket.io');
 
+const apkFilePath = path.join(__dirname, 'files', 'app-release.apk');
+
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
@@ -53,6 +55,15 @@ app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 app.use('/chats', chatsRouter);
 app.use('/notifications', notificationsRouter);
+
+app.get('/download-apk', (req, res) => {
+  res.download(apkFilePath, 'app-release.apk', (err) => {
+    if (err) {
+      console.error('Error saat mengunduh file:', err);
+      res.status(500).send('Gagal mengunduh file.');
+    }
+  });
+});
 
 io.on('connection', (socket) => {
   console.log('client connected');
